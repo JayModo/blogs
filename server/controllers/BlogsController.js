@@ -13,7 +13,7 @@ export default class BlogsController {
             //NOTE all routes after the authenticate method will require the user to be logged in to access
             .get('', this.getAll)
             .get('/:id', this.getByAuthor)
-            .get('/:id', this.getComment)
+            .get('/:id/comments', this.getComment)
             .use(Authorize.authenticated)
             .post('', this.create)
             .put('/:id', this.edit)
@@ -38,9 +38,9 @@ export default class BlogsController {
         } catch (error) { next(error) }
     }
     async getComment(req, res, next) {
+        //FIXME  what field should we search by?
         try {
-            //FIXME  what field should we search by?
-            let data = await _commentService.find(req.body).populate("author")
+            let data = await _commentService.find({ blogId: req.params.id }).populate('author')
             return res.send(data)
         } catch (error) { next(error) }
     }

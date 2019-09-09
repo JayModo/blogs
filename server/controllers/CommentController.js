@@ -26,7 +26,7 @@ export default class CommentController {
 
   async getById(req, res, next) {
     try {
-      let data = await _commentService.findById(req.params.id).populate('commentAuthor')
+      let data = await _commentService.findById(req.params.id).populate('author')
       if (!data) {
         throw new Error("Invalid Id")
       }
@@ -49,7 +49,6 @@ export default class CommentController {
       if (data) {
         return res.send(data)
       }
-      throw new Error("invalid id")
     } catch (error) {
       next(error)
     }
