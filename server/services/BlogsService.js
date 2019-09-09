@@ -12,7 +12,7 @@ const _model = new Schema({
     body: { type: String, required: true },
     img: { type: String, default: 'https://placehold.it' },
     // _id: { type: ObjectId, ref: 'blog', required: true },
-    //  comment: { type: ObjectId, ref: 'comment', default: null }
+    comment: { type: ObjectId, ref: 'comment' }
 }, { timestamps: true })
 
 export default class BlogsService {
