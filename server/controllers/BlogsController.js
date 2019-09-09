@@ -13,7 +13,7 @@ export default class BlogsController {
             //NOTE all routes after the authenticate method will require the user to be logged in to access
             .get('', this.getAll)
             .get('/:id', this.getByAuthor)
-            .get('/:id/comment', this.getComment)
+            .get('/:id', this.getComment)
             .use(Authorize.authenticated)
             .post('', this.create)
             .put('/:id', this.edit)
@@ -39,8 +39,8 @@ export default class BlogsController {
     }
     async getComment(req, res, next) {
         try {
-            let data = await _commentService.find({ author: req.params.id }).populate("comment")
-
+            //FIXME  what field should we search by?
+            let data = await _commentService.find(req.body).populate("author")
             return res.send(data)
         } catch (error) { next(error) }
     }
@@ -59,7 +59,7 @@ export default class BlogsController {
 
     async edit(req, res, next) {
         try {
-            let data = await _blogsService.findOneAndUpdate({ _id: req.params.id }, req.body.uid, { new: true })
+            let data = await _blogsService.findOneAndUpdate({ _id: req.params.id, author: req.session.uid }, req.body, { new: true })
             if (data) {
                 return res.send(data)
             }
@@ -71,9 +71,15 @@ export default class BlogsController {
 
     async delete(req, res, next) {
         try {
-            await _blogsService.findOneAndRemove({ _id: req.params.uid })
-            res.send("deleted blogs")
-        } catch (error) { next(error) }
+            //FIXME  res.send always sends back ok unlesss otherwise specified 
+            let data = await _blogsService.findOneAndRemove({ _id: req.params.id, author: req.session.uid })
+            if (data) {
+                return res.send(data)
+            }
+            throw new Error("invalid id")
+        } catch (error) {
+            next(error)
+        }
 
     }
 

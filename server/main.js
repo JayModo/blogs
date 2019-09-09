@@ -47,7 +47,7 @@ import CommentController from './controllers/CommentController'
 
 //NOTE remember the forward slash at the start of your path!
 server.use('/api/blogs', new BlogsController().router)
-server.use('/api/comment', new CommentController().router)
+server.use('/api/comments', new CommentController().router)
 
 
 

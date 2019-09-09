@@ -6,7 +6,7 @@ const _model = new Schema({
   blogId: { type: ObjectId, ref: 'blogs', required: true },
   // name: { type: String, required: true },
   body: { type: String, required: true },
-  commentAuthor: { type: ObjectId, ref: 'User', required: true },
+  author: { type: ObjectId, ref: 'User', required: true },
 }, { timestamps: true })
 
 export default class CommentService {
