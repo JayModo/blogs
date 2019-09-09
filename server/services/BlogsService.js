@@ -10,9 +10,9 @@ const _model = new Schema({
     summary: { type: String, required: true },
     author: { type: ObjectId, ref: 'User', required: true },
     body: { type: String, required: true },
-    img: { type: String, default: 'https://placehold.it' }
+    img: { type: String, default: 'https://placehold.it' },
     // _id: { type: ObjectId, ref: 'blog', required: true },
-    // comment: { type: ObjectId, ref: 'comment' }
+    //  comment: { type: ObjectId, ref: 'comment', default: null }
 }, { timestamps: true })
 
 export default class BlogsService {

@@ -1,8 +1,10 @@
 import express from 'express'
 import BlogsService from '../services/BlogsService';
 import { Authorize } from '../middleware/authorize.js'
-import { model } from 'mongoose';
+import CommentService from '../services/CommentService';
 
+
+let _commentService = new CommentService().repository
 let _blogsService = new BlogsService().repository
 
 export default class BlogsController {
@@ -11,6 +13,7 @@ export default class BlogsController {
             //NOTE all routes after the authenticate method will require the user to be logged in to access
             .get('', this.getAll)
             .get('/:id', this.getByAuthor)
+            .get('/:id', this.getComment)
             .use(Authorize.authenticated)
             .post('', this.create)
             .put('/:id', this.edit)
@@ -34,6 +37,15 @@ export default class BlogsController {
             res.send(data)
         } catch (error) { next(error) }
     }
+    async getComment(req, res, next) {
+        try {
+            let data = await _commentService.find({ author: req.params.id }).populate("author", "name")
+
+            return res.send(data)
+        } catch (error) { next(error) }
+    }
+
+
 
     async create(req, res, next) {
         try {
@@ -47,7 +59,7 @@ export default class BlogsController {
 
     async edit(req, res, next) {
         try {
-            let data = await _blogsService.findOneAndUpdate({ author: req.params.id }, req.body, { new: true })
+            let data = await _blogsService.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
             if (data) {
                 return res.send(data)
             }
